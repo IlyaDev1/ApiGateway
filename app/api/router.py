@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from app.api.schema import SensorData
 from app.core.service.main_service import MainService
+from logger import logger
 
 api_router = APIRouter()
 
@@ -10,6 +11,7 @@ service_instance = MainService()
 
 @api_router.post("/")
 async def handler(sensor_data_instance: SensorData):
+    logger.info("вызван")
     response = await service_instance.create_forecast_record(
         sensor_data_instance
     )

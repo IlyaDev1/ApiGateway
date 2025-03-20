@@ -5,7 +5,7 @@ import requests  # type: ignore
 from app.api.schema import SensorData, WeatherData
 from app.core.repositories.psql_repo import Repo
 
-url = "http://172.16.119.197/"
+url = "http://172.16.119.197:8000"
 
 
 def to_dict(weather_data: WeatherData) -> dict:
@@ -52,4 +52,4 @@ class MainService:
             "timestamp": sensor_data_instance.timestamp,
             "forecast_value": forecast_value,
         }
-        return self.repo.create_record(record_dict)
+        return await self.repo.create_record(record_dict)

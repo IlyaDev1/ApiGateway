@@ -7,7 +7,7 @@ from logger import logger
 
 app = FastAPI()
 
-app.include_router(api_router, prefix="/")
+app.include_router(api_router, prefix="/v1")
 
 
 if __name__ == "__main__":
