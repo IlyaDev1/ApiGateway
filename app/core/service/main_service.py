@@ -31,7 +31,10 @@ def get_forecast(weather_data: WeatherData) -> float:
     response = requests.get(url, data=weather_data_json, headers=headers)
 
     if response.status_code == 200:
-        return float(response.json())
+        probability = json.loads(response.content.decode("utf-8"))[
+            "Avalanche probability"
+        ]
+        return round(float(probability), 2)
     else:
         raise Exception(
             f"Ошибка при получении прогноза. Статус: {response.status_code}, Ответ: {response.text}"
