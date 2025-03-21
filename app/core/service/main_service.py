@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from enum import Enum
 
 import requests  # type: ignore
@@ -52,7 +53,9 @@ def get_forecast(weather_data: WeatherData) -> float:
         )
 
 
-async def send_message(sector_id: int, forecast_value: float):
+async def send_message(
+    sector_id: int, timestamp: datetime, forecast_value: float
+):
     hazard_class: HazardClass
     if 0 < forecast_value < 0.19:
         hazard_class = HazardClass.LOW
@@ -63,7 +66,11 @@ async def send_message(sector_id: int, forecast_value: float):
     else:
         hazard_class = HazardClass.CRIT
 
-    data = {"sector_id": sector_id, "hazard_class": hazard_class.value}
+    data = {
+        "sector_id": sector_id,
+        "timestamp": timestamp,
+        "hazard_class": hazard_class.value,
+    }
 
     async with AsyncClient() as async_client:
         response = await async_client.post(url=UserURL, json=data)
@@ -88,6 +95,10 @@ class MainService:
             "forecast_value": forecast_value,
         }
 
-        await send_message(sensor_data_instance.sector_id, forecast_value)
+        await send_message(
+            sensor_data_instance.sector_id,
+            sensor_data_instance.timestamp,
+            forecast_value,
+        )
 
         return await self.repo.create_record(record_dict)
