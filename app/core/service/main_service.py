@@ -9,7 +9,7 @@ from app.api.schema import SensorData, WeatherData
 from app.core.repositories.psql_repo import Repo
 from logger import logger
 
-url = "http://172.16.119.197:8000/v1"
+url = "http://172.16.119.197:8000"
 UserURL = "http://localhost:4222/v1"
 
 
