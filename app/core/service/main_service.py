@@ -1,11 +1,22 @@
 import json
+from enum import Enum
 
 import requests  # type: ignore
+from httpx import AsyncClient
 
 from app.api.schema import SensorData, WeatherData
 from app.core.repositories.psql_repo import Repo
+from logger import logger
 
 url = "http://172.16.119.197:8000"
+UserURL = "http://localhost:4222"
+
+
+class HazardClass(Enum):
+    LOW = "LOW"
+    MID = "MID"
+    HIGH = "HIGH"
+    CRIT = "CRIT"
 
 
 def to_dict(weather_data: WeatherData) -> dict:
@@ -41,6 +52,30 @@ def get_forecast(weather_data: WeatherData) -> float:
         )
 
 
+async def send_message(sector_id: int, forecast_value: float):
+    hazard_class: HazardClass
+    if 0 < forecast_value < 0.19:
+        hazard_class = HazardClass.LOW
+    elif 0.2 < forecast_value < 0.39:
+        hazard_class = HazardClass.MID
+    elif 0.4 < forecast_value < 0.69:
+        hazard_class = HazardClass.HIGH
+    else:
+        hazard_class = HazardClass.CRIT
+
+    data = {"sector_id": sector_id, "hazard_class": hazard_class.value}
+
+    async with AsyncClient() as async_client:
+        response = await async_client.post(url=UserURL, json=data)
+        if response.status_code == 200:
+            probability = response.json()["Avalanche probability"]
+            return round(float(probability), 2)
+        else:
+            raise Exception(
+                f"Ошибка при получении прогноза. Статус: {response.status_code}, Ответ: {response.text}"
+            )
+
+
 class MainService:
     def __init__(self):
         self.repo = Repo()
@@ -52,4 +87,7 @@ class MainService:
             "timestamp": sensor_data_instance.timestamp,
             "forecast_value": forecast_value,
         }
+
+        await send_message(sensor_data_instance.sector_id, forecast_value)
+
         return await self.repo.create_record(record_dict)
