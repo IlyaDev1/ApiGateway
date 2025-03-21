@@ -9,8 +9,8 @@ from app.api.schema import SensorData, WeatherData
 from app.core.repositories.psql_repo import Repo
 from logger import logger
 
-url = "http://172.16.119.197:8000"
-UserURL = "http://localhost:4222"
+url = "http://172.16.119.197:8000/v1"
+UserURL = "http://localhost:4222/v1"
 
 
 class HazardClass(Enum):
@@ -68,7 +68,7 @@ async def send_message(
 
     data = {
         "sector_id": sector_id,
-        "timestamp": timestamp,
+        "timestamp": timestamp.isoformat(),
         "hazard_class": hazard_class.value,
     }
 
