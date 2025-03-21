@@ -74,10 +74,7 @@ async def send_message(
 
     async with AsyncClient() as async_client:
         response = await async_client.post(url=UserURL, json=data)
-        if response.status_code == 200:
-            probability = response.json()["Avalanche probability"]
-            return round(float(probability), 2)
-        else:
+        if response.status_code != 200:
             raise Exception(
                 f"Ошибка при получении прогноза. Статус: {response.status_code}, Ответ: {response.text}"
             )
