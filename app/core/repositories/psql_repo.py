@@ -7,6 +7,8 @@ class Repo:
 
     async def create_record(self, data: dict) -> str:
         async with get_db() as session_instance:
+            if data["forecast_value"] == 1:
+                data["forecast_value"] = 0.99
             forecast = ForecastModel(
                 timestamp=data["timestamp"],
                 forecast_value=data["forecast_value"],
