@@ -26,7 +26,7 @@ def to_dict(weather_data: WeatherData) -> dict:
         "wind_max": weather_data.wind_max,
         "temp": weather_data.temp,
         "visibility": weather_data.visibility,
-        "show_depth": weather_data.show_depth,
+        "show_depth": weather_data.snow_depth,
         "rainfall": weather_data.rainfall,
         "rainfall_per_month": weather_data.rainfall_per_month,
         "total_wind_drifting": weather_data.total_wind_drifting,

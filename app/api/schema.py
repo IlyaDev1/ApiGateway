@@ -8,7 +8,7 @@ class WeatherData(BaseModel):
     wind_max: float
     temp: float
     visibility: float
-    show_depth: float
+    snow_depth: float
     rainfall: float
     rainfall_per_month: float
     wind_drifting: float
