@@ -11,7 +11,6 @@ service_instance = MainService()
 
 @api_router.post("/")
 async def handler(sensor_data_instance: SensorData):
-    logger.info("вызван")
     response = await service_instance.create_forecast_record(
         sensor_data_instance
     )

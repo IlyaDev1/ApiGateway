@@ -1,5 +1,6 @@
 from app.core.dependencies import get_db
 from app.core.models.models import ForecastModel
+from logger import logger
 
 
 class Repo:
@@ -15,6 +16,7 @@ class Repo:
                 sector_id=data["sector_id"],
             )
             session_instance.add(forecast)
+            logger.info(f"{forecast} загружен в бд")
             await session_instance.flush()
             await session_instance.commit()
             return "ok"
