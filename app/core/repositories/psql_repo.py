@@ -16,7 +16,7 @@ class Repo:
                 sector_id=data["sector_id"],
             )
             session_instance.add(forecast)
-            logger.info(f"{forecast} загружен в бд")
+            logger.info(f"Прогноз для {forecast.sector_id} загружен в бд")
             await session_instance.flush()
             await session_instance.commit()
             return "ok"
